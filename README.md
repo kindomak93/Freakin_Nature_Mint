@@ -1,11 +1,11 @@
 FreakinFutureMint API
 
-FreakinFutureMint is a Node.js API for managing custodial wallets and NFT operations, including NFT minting, ownership transfers, and retrieving NFTs owned by users.
+FreakinFutureMint is a Node.js API for managing custodial wallets and NFT operations on the Hedera network. The API supports custodial wallet creation, NFT minting, NFT ownership transfers, and retrieving NFTs owned by users.
 
 Getting Started
 1. Clone the Repository
 
-Clone the repository and navigate into the project directory:
+Clone the repository and navigate to the project directory:
 
 git clone https://github.com/kindomak93/Freakin_Nature_Mint.git
 cd Freakin_Nature_Mint
@@ -14,6 +14,7 @@ cd Freakin_Nature_Mint
 
 Copy the provided .env file into the project root.
 
+Important: Do not commit the .env file to the repository. It may contain sensitive credentials, API keys, private keys, database credentials, and other secrets.
 
 3. Start the Application
 
@@ -30,11 +31,11 @@ Authentication
 All API requests must include the following header:
 
 Header	Value
-x-api-key	env[API_KEY]
+x-api-key	Your configured API_KEY value
 
 Example:
 
-x-api-key: our_api_key
+x-api-key: your_api_key
 
 1. Create Wallet
 
@@ -54,7 +55,6 @@ Request Body
   "hashKey": "your_laravel_app_secret_hash_key"
 }
 
-
 Success Response
 
 201 Created
@@ -66,7 +66,7 @@ Success Response
   "email": "user@example.com"
 }
 
-Error Response
+Error Responses
 
 400 Bad Request / 404 Not Found
 
@@ -94,13 +94,13 @@ x-api-key: your_api_key
 
 Request Body
 {
-  "orderId": "ord_987654321",//maybe it's payment_intent_id in stripe
+  "orderId": "ord_987654321",
   "userId": "usr_12345",
   "nftType": "FAT"
 }
 
 
-Note: orderId corresponds to the payment_intent_id returned by Stripe.
+Note: orderId may correspond to the payment_intent_id returned by Stripe.
 
 Supported NFT Types
 Symbol	Name
@@ -108,8 +108,6 @@ FST	Founding Supporter Token
 FAT	Festival Access Token
 FCT	FIDGITAL Certificate Token
 PCBT	Partner / Creator Badge Token
-
-
 Success Response
 
 200 OK
@@ -144,7 +142,7 @@ Error Response
 
 3. Transfer NFT Ownership
 
-Transfers ownership of an NFT from the user's custodial wallet to another Hedera account.
+Transfers ownership of an NFT from a user's custodial wallet to another Hedera account.
 
 Endpoint
 POST /api/transfer_nft
@@ -161,7 +159,6 @@ Request Body
   "serialNumber": "2",
   "recipientAccountId": "0.0.10274229"
 }
-
 
 Success Response
 
@@ -186,16 +183,16 @@ Error Response
 Retrieves all NFTs associated with a user's custodial wallet.
 
 Endpoint
-POST /api/get_nfts
+GET /api/get_nfts
 
 Headers
-Content-Type: application/json
 x-api-key: your_api_key
 
-Request Body
-{
-  "userId": "usr_12345"
-}
+Request
+
+The userId should be provided as a query parameter.
+
+GET /api/get_nfts?userId=usr_12345
 
 Success Response
 
@@ -221,7 +218,7 @@ Success Response
   ]
 }
 
-Error Response
+Error Responses
 
 400 Bad Request / 404 Not Found
 
@@ -242,11 +239,12 @@ Method	Endpoint	Description
 POST	/api/create_wallet	Create a custodial wallet
 POST	/api/mint	Mint an NFT
 POST	/api/transfer_nft	Transfer NFT ownership
-POST	/api/get_nfts	Retrieve NFTs owned by a user
+GET	/api/get_nfts	Retrieve NFTs owned by a user
 Development Notes
-All endpoints require the x-api-key authentication header.
+All API endpoints require the x-api-key authentication header.
 Keep sensitive configuration values in the .env file.
 Never commit secrets, API keys, private keys, or database credentials to Git.
 The application is designed to run using Docker Compose.
 NFT operations interact with the Hedera network.
-The orderId used by the mint endpoint could be the Stripe payment_intent_id.
+The orderId used by the mint endpoint may correspond to the Stripe payment_intent_id.
+The /api/get_nfts endpoint uses a GET request with userId provided as a query parameter.

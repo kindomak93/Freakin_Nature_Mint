@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"  
+}
+
+model TokenCollection {
+  id          String   @id @default(uuid())
+  symbol      String   @unique
+  name        String
+  tokenId     String   @unique // Hedera Token ID e.g., "0.0.10164773"
+  isMutable   Boolean
+  createdAt   DateTime @default(now())
+}
+
+model CustodialWallet {
+  id               String   @id @default(uuid())
+  userId           String?  @unique
+  email            String   @unique
+  accountNumber    String   @unique // Hedera Account ID (e.g., "0.0.7891011")
+  encryptedKey     String   // Encrypted Hedera Private Key
+  iv               String   // Initialization Vector for AES
+  createdAt        DateTime @default(now())
+}
+
+model Nft {
+  id           String   @id @default(uuid())
+  tokenId      String
+  serialNumber String
+  ownerUserId  String?
+  name         String
+  symbol       String
+  isMutable    Boolean
+  image        String?
+  description  String?
+  rawMetadata  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([tokenId, serialNumber])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  endpoint   String
+  method     String
+  userId     String?
+  statusCode Int?
+  ipAddress  String?
+  request    String   // Store request payload as JSON string
+  response   String?  // Store response body as JSON string
+  error      String?  // Store error details if request failed
+  durationMs Int      // Processing time in milliseconds
+  createdAt  DateTime @default(now())
+}

@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "@hashgraph/sdk": "^2.72.0",
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "axios": "^1.19.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.23.0",
+    "prisma": "^7.9.1"
+  },
+  "scripts": {
+    "start:server": "node src/server.js"
+  },
+  "name": "freakinnaturemint",
+  "version": "1.0.0",
+  "description": "This project was built to mint NFTs.",
+  "main": "mintTokens.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@types/pg": "^8.23.1"
+  },
+  
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
+}

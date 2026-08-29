@@ -77,14 +77,23 @@ async function main() {
       console.log(`[FOUND ON-CHAIN] ${config.symbol} found on Hedera with Token ID: ${onChainToken.token_id}`);
 
       // Save the existing on-chain collection to your database
-      await prisma.tokenCollection.create({
-        data: {
-          symbol: config.symbol,
-          name: config.name,
-          tokenId: onChainToken.token_id,
-          isMutable: config.isMutable,
-        },
-      });
+      await prisma.tokenCollection.upsert({
+          where: {
+            symbol: config.symbol,
+          },
+          update: {
+            name: config.name,
+            tokenId: onChainToken.token_id,
+            isMutable: config.isMutable,
+          },
+          create: {
+            symbol: config.symbol,
+            name: config.name,
+            tokenId: onChainToken.token_id,
+            isMutable: config.isMutable,
+          },
+        });
+
 
       console.log(`  └ Synced existing on-chain Token ID ${onChainToken.token_id} into database.\n`);
       continue;
@@ -113,14 +122,23 @@ async function main() {
     console.log(`  └ Created on Hedera with Token ID: ${realTokenId}`);
 
     // Save newly created token to PostgreSQL
-    await prisma.tokenCollection.create({
-      data: {
-        symbol: config.symbol,
-        name: config.name,
-        tokenId: realTokenId,
-        isMutable: config.isMutable,
-      },
-    });
+    await prisma.tokenCollection.upsert({
+        where: {
+          symbol: config.symbol,
+        },
+        update: {
+          name: config.name,
+          tokenId: onChainToken.token_id,
+          isMutable: config.isMutable,
+        },
+        create: {
+          symbol: config.symbol,
+          name: config.name,
+          tokenId: onChainToken.token_id,
+          isMutable: config.isMutable,
+        },
+      });
+
 
     console.log(`  └ Saved to TokenCollection database table.\n`);
   }

@@ -23,9 +23,6 @@
   "type": "module",
   "devDependencies": {
     "@types/pg": "^8.23.1"
-  },
+  }  
   
-  "prisma": {
-    "seed": "node prisma/seed.js"
-  }
 }

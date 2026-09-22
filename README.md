@@ -118,7 +118,9 @@ x-api-key: your_api_key
 {
   "orderId": "ord_987654321",
   "userId": "usr_12345",
-  "nftType": "FAT"
+  "nftType": "FAT",
+  "itemTitle": "PAUF 2026",
+  "quantity": "4"
 }
 ```
 > **Note:** `orderId` may correspond to the `payment_intent_id` returned by Stripe.
@@ -137,23 +139,74 @@ x-api-key: your_api_key
 
 ```json
 {
-  "success": true,
-  "message": "Minted Festival Access Token successfully",
-  "orderId": "ord_987654321",
-  "nft": {
-    "id": "e4b3c2d1-0000-0000-0000-123456789abc",
-    "tokenId": "0.0.10164774",
-    "serialNumber": "1",
-    "ownerUserId": "usr_12345",
-    "name": "Festival Access Token #ord_987654321",
-    "symbol": "FAT",
-    "isMutable": true,
-    "image": "https://picsum.photos/id/11/400",
-    "description": "Official Festival Access Token issued to User usr_12345 (Order #ord_987654321)",
-    "rawMetadata": "{\"n\":\"Festival Access Token #ord_987654321\",\"d\":\"Official Festival Access Token issued to User usr_12345 (Order #ord_987654321)\",\"i\":\"https://picsum.photos/id/11/400\"}",
-    "createdAt": "2026-08-28T19:00:00.000Z",
-    "updatedAt": "2026-08-28T19:00:00.000Z"
-  }
+    "success": true,
+    "message": "Minted and transferred 4 ticket(s) for 'PAUF' successfully.",
+    "orderId": "ord_987654321ord_987654321",
+    "quantity": 4,
+    "recipientAccount": "0.0.10274229",
+    "nfts": [
+        {
+            "id": "26afcd9d-2a1d-48ec-b867-970de2fe78fb",
+            "tokenId": "0.0.10164866",
+            "serialNumber": "8",
+            "ownerUserId": "usr_12345usr_12345usr_12345",
+            "name": "PAUF Pass #1",
+            "symbol": "FAT",
+            "itemTitle": "PAUF 2026",
+            "isMutable": true,
+            "image": "",
+            "description": "issued to usr_12345usr_12345usr_12345",
+            "rawMetadata": "{\"n\":\"PAUF Pass #1\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "createdAt": "2026-09-22T14:42:53.360Z",
+            "updatedAt": "2026-09-22T14:42:53.360Z"
+        },
+        {
+            "id": "251af6f4-0136-4a61-94b0-8f9e16e3a1a8",
+            "tokenId": "0.0.10164866",
+            "serialNumber": "9",
+            "ownerUserId": "usr_12345usr_12345usr_12345",
+            "name": "PAUF Pass #2",
+            "symbol": "FAT",
+            "itemTitle": "PAUF 2026",
+            "isMutable": true,
+            "image": "",
+            "description": "issued to usr_12345usr_12345usr_12345",
+            "rawMetadata": "{\"n\":\"PAUF Pass #2\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "createdAt": "2026-09-22T14:42:53.363Z",
+            "updatedAt": "2026-09-22T14:42:53.363Z"
+        },
+        {
+            "id": "1ed7efe0-7cd0-4994-a327-273b346c2f31",
+            "tokenId": "0.0.10164866",
+            "serialNumber": "10",
+            "ownerUserId": "usr_12345usr_12345usr_12345",
+            "name": "PAUF Pass #3",
+            "symbol": "FAT",
+            "itemTitle": "PAUF 2026",
+            "isMutable": true,
+            "image": "",
+            "description": "issued to usr_12345usr_12345usr_12345",
+            "rawMetadata": "{\"n\":\"PAUF Pass #3\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "createdAt": "2026-09-22T14:42:53.365Z",
+            "updatedAt": "2026-09-22T14:42:53.365Z"
+        },
+        {
+            "id": "6a99612c-74a8-4bd9-be6d-74381f886e13",
+            "tokenId": "0.0.10164866",
+            "serialNumber": "11",
+            "ownerUserId": "usr_12345usr_12345usr_12345",
+            "name": "PAUF Pass #4",
+            "symbol": "FAT",
+            "itemTitle": "PAUF 2026",
+            "isMutable": true,
+            "image": "",
+            "description": "issued to usr_12345usr_12345usr_12345",
+            "rawMetadata": "{\"n\":\"PAUF Pass #4\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "createdAt": "2026-09-22T14:42:53.367Z",
+            "updatedAt": "2026-09-22T14:42:53.367Z"
+        }
+    ],
+    "jobId": "5daa4f8b-e791-4c82-93a7-d336ad984e23"
 }
 ```
 ### Error Response

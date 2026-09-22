@@ -8,11 +8,14 @@ datasource db {
 
 model TokenCollection {
   id          String   @id @default(uuid())
-  symbol      String   @unique
+  symbol      String   
   name        String
-  tokenId     String   @unique // Hedera Token ID e.g., "0.0.10164773"
-  isMutable   Boolean
+  tokenId     String    // Hedera Token ID e.g., "0.0.10164773"
+  isMutable   Boolean  @default(false)
+  itemTitle   String   @default("")
   createdAt   DateTime @default(now())
+
+  @@unique([symbol, itemTitle], name: "symbol_itemTitle")
 }
 
 model CustodialWallet {
@@ -32,12 +35,15 @@ model Nft {
   ownerUserId  String?
   name         String
   symbol       String
+  itemTitle    String?  // <-- Added field for specific token name
   isMutable    Boolean
   image        String?
   description  String?
   rawMetadata  String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  checkIn      TicketCheckIn?
 
   @@unique([tokenId, serialNumber])
 }
@@ -54,4 +60,26 @@ model AuditLog {
   error      String?  // Store error details if request failed
   durationMs Int      // Processing time in milliseconds
   createdAt  DateTime @default(now())
+}
+
+model WebhookJob {
+  id         String   @id @default(uuid())
+  url        String
+  payload    String   // Store JSON payload string
+  attempts   Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model TicketCheckIn {
+  id           String    @id @default(uuid())
+  tokenId      String
+  serialNumber String
+  isSpent      Boolean   @default(false)
+  scannedAt    DateTime?
+  scannedBy    String?   // Gate operator or device ID
+
+  // Foreign key relation to Nft
+  nft          Nft       @relation(fields: [tokenId, serialNumber], references: [tokenId, serialNumber], onDelete: Cascade)
+
+  @@unique([tokenId, serialNumber])
 }

@@ -10,7 +10,7 @@ import transferRoutes from "./routes/transfer.routes.js";
 import nftRoutes from "./routes/nft.routes.js";
 import { requireApiKey } from "./middleware/apiKey.middleware.js";
 import { auditLogMiddleware } from "./middleware/auditLog.middleware.js";
-
+import { startWebhookWorker } from "./services/webhookWorker.js";
 
 const app = express();
 app.use(cors());
@@ -53,4 +53,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, async () => {
   console.log(`Server running on http://localhost:${PORT}`);  
   //await getAndLogNfts();
+  startWebhookWorker();
 });

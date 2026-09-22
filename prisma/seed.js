@@ -13,134 +13,109 @@ import {
 
 dotenv.config();
 
-// 1. Initialize Prisma & PostgreSQL Connection
 const { PrismaClient } = prismaPkg;
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-// 2. Initialize Hedera Client
 const operatorId = process.env.HEDERA_ACCOUNT_ID;
 const operatorKey = PrivateKey.fromStringECDSA(process.env.HEDERA_PRIVATE_KEY);
 const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 
-// Mirror Node Base URL for Testnet
 const MIRROR_NODE_URL = "https://testnet.mirrornode.hedera.com/api/v1";
 
 const collectionsToCreate = [
-  { symbol: "FST", name: "Founding Supporter Token", isMutable: false },
-  { symbol: "FAT", name: "Festival Access Token", isMutable: true },
-  { symbol: "FCT", name: "FIDGITAL Certificate Token", isMutable: false },
-  { symbol: "PCBT", name: "Partner / Creator Badge Token", isMutable: true },
+  { symbol: "FST", name: "Founding Supporter Token", isMutable: false, itemTitle: "TITLE FOUNDING PARTNER" },
+  { symbol: "FST", name: "Founding Supporter Token", isMutable: false, itemTitle: "FOUNDING ECOSYSTEM PARTNER" },
+  { symbol: "FST", name: "Founding Supporter Token", isMutable: false, itemTitle: "FOUNDING CIRCLE PARTNER" },
+  { symbol: "FST", name: "Founding Supporter Token", isMutable: false, itemTitle: "FOUNDING SUPPORTER PARTNER" },
+  { symbol: "FAT", name: "Festival Access Token", isMutable: true, itemTitle: "Pan African Unity Festival" },
+  { symbol: "FCT", name: "FIDGITAL Certificate Token", isMutable: false, itemTitle: "" },
+  { symbol: "PCBT", name: "Partner / Creator Badge Token", isMutable: true, itemTitle: "" },
 ];
 
-/**
- * Queries Hedera Mirror Node to check if a token symbol exists on-chain for operatorId
- */
 async function findTokenOnChainBySymbol(symbol) {
   try {
     const response = await axios.get(`${MIRROR_NODE_URL}/accounts/${operatorId}/tokens`);
     const tokens = response.data.tokens || [];
 
     for (const token of tokens) {
-      // Query individual token details from Mirror Node to check its symbol
       const tokenInfo = await axios.get(`${MIRROR_NODE_URL}/tokens/${token.token_id}`);
       if (tokenInfo.data.symbol === symbol) {
-        return tokenInfo.data; // Returns token info object containing token_id
+        return tokenInfo.data.token_id;
       }
     }
   } catch (error) {
-    console.warn(`[Mirror Node Warning] Failed to fetch on-chain tokens: ${error.message}`);
+    console.warn(`[Mirror Node Warning] ${error.message}`);
   }
   return null;
 }
 
 async function main() {
-  console.log("Checking database and Hedera wallet for Token Collections...\n");
+  console.log("Seeding Token Collections...\n");
+
+  // In-memory cache for Token IDs across iterations
+  const tokenCache = {};
 
   for (const config of collectionsToCreate) {
-    // 1. Check if collection already exists in database
-    const existingInDb = await prisma.tokenCollection.findUnique({
-      where: { symbol: config.symbol },
+    const itemTitle = config.itemTitle || "";
+
+    // 1. Check if DB record already exists
+    const existingInDb = await prisma.tokenCollection.findFirst({
+      where: { symbol: config.symbol, itemTitle: itemTitle },
     });
 
     if (existingInDb) {
-      console.log(`[SKIP DB] ${config.symbol} exists in database with Token ID: ${existingInDb.tokenId}`);
+      console.log(`[SKIP] DB already has '${config.symbol}' - '${itemTitle}'`);
+      tokenCache[config.symbol] = existingInDb.tokenId;
       continue;
     }
 
-    // 2. Check if collection exists on-chain in your Hedera Treasury wallet
-    console.log(`Checking Hedera Mirror Node for existing '${config.symbol}' on-chain...`);
-    const onChainToken = await findTokenOnChainBySymbol(config.symbol);
+    // 2. Resolve Hedera Token ID (Check Cache -> Mirror Node -> Create New)
+    let targetTokenId = tokenCache[config.symbol];
 
-    if (onChainToken) {
-      console.log(`[FOUND ON-CHAIN] ${config.symbol} found on Hedera with Token ID: ${onChainToken.token_id}`);
-
-      // Save the existing on-chain collection to your database
-      await prisma.tokenCollection.upsert({
-          where: {
-            symbol: config.symbol,
-          },
-          update: {
-            name: config.name,
-            tokenId: onChainToken.token_id,
-            isMutable: config.isMutable,
-          },
-          create: {
-            symbol: config.symbol,
-            name: config.name,
-            tokenId: onChainToken.token_id,
-            isMutable: config.isMutable,
-          },
-        });
-
-
-      console.log(`  └ Synced existing on-chain Token ID ${onChainToken.token_id} into database.\n`);
-      continue;
+    if (!targetTokenId) {
+      targetTokenId = await findTokenOnChainBySymbol(config.symbol);
+      if (targetTokenId) {
+        console.log(`[FOUND ON-CHAIN] Reusing Token ID ${targetTokenId} for '${config.symbol}'`);
+      }
     }
 
-    // 3. If missing from both DB and Wallet -> Deploy new collection to Hedera
-    console.log(`[CREATE NEW] Deploying collection '${config.name}' (${config.symbol}) to Hedera...`);
+    if (!targetTokenId) {
+      console.log(`[DEPLOYING] Deploying new '${config.symbol}' token to Hedera...`);
+      const createTx = new TokenCreateTransaction()
+        .setTokenName(config.name)
+        .setTokenSymbol(config.symbol)
+        .setTokenType(TokenType.NonFungibleUnique)
+        .setSupplyType(TokenSupplyType.Finite)
+        .setMaxSupply(1000)
+        .setTreasuryAccountId(operatorId)
+        .setSupplyKey(operatorKey);
 
-    const createTx = new TokenCreateTransaction()
-      .setTokenName(config.name)
-      .setTokenSymbol(config.symbol)
-      .setTokenType(TokenType.NonFungibleUnique)
-      .setSupplyType(TokenSupplyType.Finite)
-      .setMaxSupply(1000)
-      .setTreasuryAccountId(operatorId)
-      .setSupplyKey(operatorKey);
+      if (config.isMutable) createTx.setAdminKey(operatorKey);
 
-    if (config.isMutable) {
-      createTx.setAdminKey(operatorKey);
+      const txResponse = await createTx.execute(client);
+      const receipt = await txResponse.getReceipt(client);
+      targetTokenId = receipt.tokenId.toString();
+      console.log(`  └ Deployed on Hedera as: ${targetTokenId}`);
     }
 
-    const txResponse = await createTx.execute(client);
-    const receipt = await txResponse.getReceipt(client);
-    const realTokenId = receipt.tokenId.toString();
+    // Cache the resolved Token ID for future loops
+    tokenCache[config.symbol] = targetTokenId;
 
-    console.log(`  └ Created on Hedera with Token ID: ${realTokenId}`);
+    // 3. Save unique record into PostgreSQL
+    await prisma.tokenCollection.create({
+      data: {
+        symbol: config.symbol,
+        name: config.name,
+        tokenId: targetTokenId,
+        isMutable: config.isMutable,
+        itemTitle: itemTitle,
+      },
+    });
 
-    // Save newly created token to PostgreSQL
-    await prisma.tokenCollection.upsert({
-        where: {
-          symbol: config.symbol,
-        },
-        update: {
-          name: config.name,
-          tokenId: onChainToken.token_id,
-          isMutable: config.isMutable,
-        },
-        create: {
-          symbol: config.symbol,
-          name: config.name,
-          tokenId: onChainToken.token_id,
-          isMutable: config.isMutable,
-        },
-      });
-
-
-    console.log(`  └ Saved to TokenCollection database table.\n`);
+    //console.log(`  └ Inserted DB Row: ${config.symbol} | ${itemTitle || "Default"} | ${targetTokenId}`);
+    console.log(`  └ Saved '${config.symbol}' - '${itemTitle || "Default"}' (Token ID: ${targetTokenId}) to DB.\n`);
   }
 
   console.log("Seeding and sync process completed successfully.");

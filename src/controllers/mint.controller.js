@@ -1,7 +1,7 @@
 import { mintNft as mintNftService } from "../services/mint.service.js";
 
 export const mintNft = async (req, res) => {
-  const { orderId, userId, nftType } = req.body;
+  const { orderId, userId, nftType, itemTitle, quantity } = req.body;
 
   if (!orderId || !userId || !nftType) {
     return res.status(400).json({
@@ -15,6 +15,8 @@ export const mintNft = async (req, res) => {
       orderId,
       userId,
       nftType,
+      itemTitle, 
+      quantity
     });
 
     return res.status(200).json({

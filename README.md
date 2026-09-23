@@ -116,11 +116,19 @@ x-api-key: your_api_key
 
 ```json
 {
-  "orderId": "ord_987654321",
-  "userId": "usr_12345",
+ "orderId": "ord_987654321ord_987654321",
+  "userId": "usr_12345usr_12345usr_12345",
   "nftType": "FAT",
-  "itemTitle": "PAUF 2026",
-  "quantity": "4"
+  "nftItems": [
+    {      
+      "itemTitle": "PAUF 2026 VIP",
+      "quantity": 2
+    },
+    {
+       "itemTitle": "FNB Regular",
+      "quantity": 3
+    }    
+  ]
 }
 ```
 > **Note:** `orderId` may correspond to the `payment_intent_id` returned by Stripe.
@@ -140,73 +148,88 @@ x-api-key: your_api_key
 ```json
 {
     "success": true,
-    "message": "Minted and transferred 4 ticket(s) for 'PAUF' successfully.",
+    "message": "Minted and transferred 5 ticket(s) across 2 cart item(s) successfully.",
     "orderId": "ord_987654321ord_987654321",
-    "quantity": 4,
+    "quantity": 5,
     "recipientAccount": "0.0.10274229",
     "nfts": [
         {
-            "id": "26afcd9d-2a1d-48ec-b867-970de2fe78fb",
+            "id": "3fd0b4a7-79d2-41e6-9963-f8f97a4caa57",
             "tokenId": "0.0.10164866",
-            "serialNumber": "8",
+            "serialNumber": "12",
             "ownerUserId": "usr_12345usr_12345usr_12345",
-            "name": "PAUF Pass #1",
+            "name": "Festival Access Token",
             "symbol": "FAT",
-            "itemTitle": "PAUF 2026",
+            "itemTitle": "PAUF 2026 VIP",
             "isMutable": true,
             "image": "",
             "description": "issued to usr_12345usr_12345usr_12345",
-            "rawMetadata": "{\"n\":\"PAUF Pass #1\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
-            "createdAt": "2026-09-22T14:42:53.360Z",
-            "updatedAt": "2026-09-22T14:42:53.360Z"
+            "rawMetadata": "{\"n\":\"PAUF 2026 VIP Pass #1\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "createdAt": "2026-09-23T19:51:39.097Z",
+            "updatedAt": "2026-09-23T19:51:39.097Z"
         },
         {
-            "id": "251af6f4-0136-4a61-94b0-8f9e16e3a1a8",
+            "id": "7077d62d-580f-47b5-b381-47eb4651b3a7",
             "tokenId": "0.0.10164866",
-            "serialNumber": "9",
+            "serialNumber": "13",
             "ownerUserId": "usr_12345usr_12345usr_12345",
-            "name": "PAUF Pass #2",
+            "name": "Festival Access Token",
             "symbol": "FAT",
-            "itemTitle": "PAUF 2026",
+            "itemTitle": "PAUF 2026 VIP",
             "isMutable": true,
             "image": "",
             "description": "issued to usr_12345usr_12345usr_12345",
-            "rawMetadata": "{\"n\":\"PAUF Pass #2\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
-            "createdAt": "2026-09-22T14:42:53.363Z",
-            "updatedAt": "2026-09-22T14:42:53.363Z"
+            "rawMetadata": "{\"n\":\"PAUF 2026 VIP Pass #2\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "createdAt": "2026-09-23T19:51:39.122Z",
+            "updatedAt": "2026-09-23T19:51:39.122Z"
         },
         {
-            "id": "1ed7efe0-7cd0-4994-a327-273b346c2f31",
+            "id": "5eb2ffc9-cb8a-4bee-b1c3-3d517b768e47",
             "tokenId": "0.0.10164866",
-            "serialNumber": "10",
+            "serialNumber": "14",
             "ownerUserId": "usr_12345usr_12345usr_12345",
-            "name": "PAUF Pass #3",
+            "name": "Festival Access Token",
             "symbol": "FAT",
-            "itemTitle": "PAUF 2026",
+            "itemTitle": "FNB Regular",
             "isMutable": true,
             "image": "",
             "description": "issued to usr_12345usr_12345usr_12345",
-            "rawMetadata": "{\"n\":\"PAUF Pass #3\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
-            "createdAt": "2026-09-22T14:42:53.365Z",
-            "updatedAt": "2026-09-22T14:42:53.365Z"
+            "rawMetadata": "{\"n\":\"FNB Regular Pass #1\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "createdAt": "2026-09-23T19:51:41.779Z",
+            "updatedAt": "2026-09-23T19:51:41.779Z"
         },
         {
-            "id": "6a99612c-74a8-4bd9-be6d-74381f886e13",
+            "id": "5f6362d7-b2a7-45e6-bcb7-f95592172f5a",
             "tokenId": "0.0.10164866",
-            "serialNumber": "11",
+            "serialNumber": "15",
             "ownerUserId": "usr_12345usr_12345usr_12345",
-            "name": "PAUF Pass #4",
+            "name": "Festival Access Token",
             "symbol": "FAT",
-            "itemTitle": "PAUF 2026",
+            "itemTitle": "FNB Regular",
             "isMutable": true,
             "image": "",
             "description": "issued to usr_12345usr_12345usr_12345",
-            "rawMetadata": "{\"n\":\"PAUF Pass #4\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
-            "createdAt": "2026-09-22T14:42:53.367Z",
-            "updatedAt": "2026-09-22T14:42:53.367Z"
+            "rawMetadata": "{\"n\":\"FNB Regular Pass #2\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "createdAt": "2026-09-23T19:51:41.791Z",
+            "updatedAt": "2026-09-23T19:51:41.791Z"
+        },
+        {
+            "id": "840e379b-8006-49e6-9fb2-ab596475931a",
+            "tokenId": "0.0.10164866",
+            "serialNumber": "16",
+            "ownerUserId": "usr_12345usr_12345usr_12345",
+            "name": "Festival Access Token",
+            "symbol": "FAT",
+            "itemTitle": "FNB Regular",
+            "isMutable": true,
+            "image": "",
+            "description": "issued to usr_12345usr_12345usr_12345",
+            "rawMetadata": "{\"n\":\"FNB Regular Pass #3\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "createdAt": "2026-09-23T19:51:41.795Z",
+            "updatedAt": "2026-09-23T19:51:41.795Z"
         }
     ],
-    "jobId": "5daa4f8b-e791-4c82-93a7-d336ad984e23"
+    "jobId": "838f91fb-37ee-40b7-8e7f-91414a6a67f7"
 }
 ```
 ### Error Response

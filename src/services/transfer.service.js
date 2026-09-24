@@ -20,9 +20,19 @@ export const transferNft = async ({
       userId: String(userId),
     },
   });
+  const recipientUser = await prisma.custodialWallet.findUnique({
+    where: {
+      accountNumber: recipientAccountId
+    }
+  });
 
   if (!wallet) {
     const error = new Error("Custodial wallet not found.");
+    error.statusCode = 404;
+    throw error;
+  }
+  if(!recipientUser){
+    const error = new Error("The recipient Account Id for the Custodial wallet not found.");
     error.statusCode = 404;
     throw error;
   }
@@ -58,6 +68,7 @@ export const transferNft = async ({
   const receipt =
     await txResponse.getReceipt(client);
 
+  
   // 6. Update local database
   await prisma.nft.update({
     where: {
@@ -67,7 +78,7 @@ export const transferNft = async ({
       },
     },
     data: {
-      ownerUserId: null,
+      ownerUserId: recipientUser.userId,
     },
   });
 

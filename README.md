@@ -307,7 +307,7 @@ x-api-key: your_api_key
 
 ```json
 {
-  "userId": "usr_12345"
+  "userId": "usr_12345usr_12345usr_12345"
 }
 ```
 ### Success Response
@@ -316,23 +316,72 @@ x-api-key: your_api_key
 
 ```json
 {
-  "success": true,
-  "nfts": [
-    {
-      "tokenId": "0.0.123456",
-      "serialNumber": "1",
-      "name": "Artwork #1",
-      "symbol": "ART",
-      "metadata": "ipfs://QmExample..."
-    },
-    {
-      "tokenId": "0.0.123456",
-      "serialNumber": "2",
-      "name": "Artwork #2",
-      "symbol": "ART",
-      "metadata": "ipfs://QmExample..."
-    }
-  ]
+    "success": true,
+    "userId": "usr_12345usr_12345usr_12345",
+    "accountNumber": "0.0.10274229",
+    "count": 10,
+    "nfts": [
+        {
+            "tokenId": "0.0.10164866",
+            "serialNumber": "16",
+            "symbol": "FAT",
+            "name": "Festival Access Token",
+            "description": "issued to usr_12345usr_12345usr_12345",
+            "image": "",
+            "itemTitle": "FNB Regular",
+            "rawMetadata": "{\"n\":\"FNB Regular Pass #3\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "isMutable": true,
+            "createdAt": "2026-09-23T19:51:41.795Z"
+        },
+        {
+            "tokenId": "0.0.10164866",
+            "serialNumber": "15",
+            "symbol": "FAT",
+            "name": "Festival Access Token",
+            "description": "issued to usr_12345usr_12345usr_12345",
+            "image": "",
+            "itemTitle": "FNB Regular",
+            "rawMetadata": "{\"n\":\"FNB Regular Pass #2\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "isMutable": true,
+            "createdAt": "2026-09-23T19:51:41.791Z"
+        },
+        {
+            "tokenId": "0.0.10164866",
+            "serialNumber": "14",
+            "symbol": "FAT",
+            "name": "Festival Access Token",
+            "description": "issued to usr_12345usr_12345usr_12345",
+            "image": "",
+            "itemTitle": "FNB Regular",
+            "rawMetadata": "{\"n\":\"FNB Regular Pass #1\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "isMutable": true,
+            "createdAt": "2026-09-23T19:51:41.779Z"
+        },
+        {
+            "tokenId": "0.0.10164866",
+            "serialNumber": "13",
+            "symbol": "FAT",
+            "name": "Festival Access Token",
+            "description": "issued to usr_12345usr_12345usr_12345",
+            "image": "",
+            "itemTitle": "PAUF 2026 VIP",
+            "rawMetadata": "{\"n\":\"PAUF 2026 VIP Pass #2\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "isMutable": true,
+            "createdAt": "2026-09-23T19:51:39.122Z"
+        },
+        {
+            "tokenId": "0.0.10164866",
+            "serialNumber": "12",
+            "symbol": "FAT",
+            "name": "Festival Access Token",
+            "description": "issued to usr_12345usr_12345usr_12345",
+            "image": "",
+            "itemTitle": "PAUF 2026 VIP",
+            "rawMetadata": "{\"n\":\"PAUF 2026 VIP Pass #1\",\"d\":\"issued to usr_12345usr_12345usr_12345\",\"i\":\"\"}",
+            "isMutable": true,
+            "createdAt": "2026-09-23T19:51:39.097Z"
+        }        
+    ]
 }
 ```
 **400 Bad Request / 404 Not Found**

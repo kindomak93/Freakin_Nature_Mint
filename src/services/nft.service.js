@@ -36,6 +36,8 @@ export const getUserNfts = async (userId) => {
       name: nft.name,
       description: nft.description,
       image: nft.image,
+      itemTitle: nft.itemTitle,
+      rawMetadata: nft.rawMetadata,
       isMutable: nft.isMutable,
       createdAt: nft.createdAt,
     })),
